@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trang sinh viên</title>
+    <link rel="stylesheet" href="student_home.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <!-- Đã có Font Awesome -->
+  </head>
+  <body>
+    <div class="wrapper">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <h2>
+          <i class="fa-solid fa-graduation-cap" style="color: white"></i>
+          <span>Sinh viên</span>
+        </h2>
+        <ul>
+          <li id="nav-register" class="active">📘 Đăng ký khóa học</li>
+          <li id="nav-my-courses">📚 Khóa học đã đăng ký</li>
+          <li id="nav-logout">
+            <i class="fa-solid fa-sign-out-alt"></i> Đăng xuất
+          </li>
+        </ul>
+      </aside>
+
+      <!-- Main content -->
+      <main class="main">
+        <div class="topbar">
+          👋 Xin chào, <strong id="studentName"></strong>
+        </div>
+        <div class="content" id="main-content">
+          <!-- Nội dung sẽ được load động tại đây -->
+        </div>
+      </main>
+    </div>
+    <script defer src="student-main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Đăng nhập</title>
+    <link rel="stylesheet" href="login.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h2>Đăng nhập</h2>
+      <p class="subtitle">Hệ thống quản lý khóa học trực tuyến</p>
+
+      <div id="alert" class="alert" style="display: none">
+        Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.
+      </div>
+
+      <input type="text" id="username" placeholder="Tên đăng nhập" />
+      <input type="password" id="password" placeholder="Mật khẩu" />
+
+      <button onclick="login()">Đăng nhập</button>
+
+      <p>
+        Chưa có tài khoản?
+        <button
+          class="secondary"
+          onclick="window.location.href='register.html'"
+        >
+          Đăng ký
+        </button>
+      </p>
+    </div>
+
+    <script>
+      async function login() {
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value.trim();
+
+        if (!username || !password) {
+          alert("Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.");
+          return;
+        }
+
+        try {
+          const res = await fetch("http://localhost:3000/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password }),
+          });
+
+          if (!res.ok) {
+            const errText = await res.text();
+            throw new Error(`Lỗi server: ${errText}`);
+          }
+
+          const data = await res.json();
+
+          if (data.token) {
+            // ✅ Lưu đầy đủ thông tin vào localStorage
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("userId", data.id); // 🛠 Lưu id người dùng
+            localStorage.setItem("name", data.name);
+            localStorage.setItem("role", data.role);
+
+            // ✅ Chuyển hướng theo role
+            if (data.role === "admin") {
+              window.location.href = "admin-home.html";
+            } else if (data.role === "student") {
+              window.location.href = "student-home.html";
+            } else {
+              alert("Vai trò không hợp lệ!");
+            }
+          } else {
+            alert(data.error || "Đăng nhập thất bại!");
+          }
+        } catch (err) {
+          console.error("Login error:", err);
+          alert("Lỗi đăng nhập hoặc không kết nối được với server.");
+        }
+      }
+    </script>
+  </body>
+</html>
+z

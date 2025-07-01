@@ -1,0 +1,45 @@
+<link rel="stylesheet" href="student-style.css" />
+<div class="page">
+  <h2><i class="fa-solid fa-user-graduate"></i> Danh sách khóa học</h2>
+  <div id="courseList"></div>
+</div>
+
+<!-- Popup hiển thị chi tiết -->
+<div
+  id="popupOverlay"
+  style="
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  "
+>
+  <div
+    id="detailPopup"
+    style="
+      background: white;
+      width: 600px;
+      margin: 100px auto;
+      padding: 20px;
+      border-radius: 10px;
+      position: relative;
+    "
+  >
+    <h3>📘 Danh sách sinh viên đăng ký</h3>
+    <table border="1" width="100%" style="margin-bottom: 10px">
+      <thead>
+        <tr>
+          <th>ID Sinh viên</th>
+          <th>Tên Sinh viên</th>
+          <th>Trạng thái</th>
+        </tr>
+      </thead>
+      <tbody id="studentDetailList"></tbody>
+    </table>
+    <button onclick="closePopup()">Đóng</button>
+  </div>
+</div>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Trang quản trị</title>
+    <link rel="stylesheet" href="admin-style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="wrapper">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <h2><i class="fa-solid fa-graduation-cap"></i> Admin</h2>
+        <ul>
+          <li id="nav-account"><i class="fa-solid fa-users"></i> Tài khoản</li>
+          <li id="nav-course"><i class="fa-solid fa-book"></i> Khóa học</li>
+          <li id="nav-student">
+            <i class="fa-solid fa-user-graduate"></i> Sinh viên
+          </li>
+          <li id="nav-logout">
+            <i class="fa-solid fa-sign-out-alt"></i> Đăng xuất
+          </li>
+        </ul>
+      </div>
+
+      <!-- Nội dung -->
+      <div class="main">
+        <div class="topbar">
+          <span>👋 Xin chào, <strong id="adminName">Admin</strong></span>
+        </div>
+        <div id="main-content" class="content">
+          Vui lòng chọn một chức năng bên trái.
+        </div>
+      </div>
+    </div>
+    <script src="config.js"></script>
+    <script src="admin-main.js"></script>
+    <script src="admin-router.js"></script>
+  </body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Đăng ký</title>
+    <style>
+      body {
+        font-family: "Poppins", sans-serif; /* Font hiện đại */
+        background: linear-gradient(
+          135deg,
+          #e6f0fa,
+          #b3c9e6
+        ); /* Gradient xanh biển nhạt */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        padding: 20px;
+        overflow: hidden;
+      }
+
+      h2 {
+        color: #1e90ff; /* Xanh biển nổi bật (DodgerBlue) */
+        margin-bottom: 20px;
+        font-size: 28px;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .form-container {
+        width: 100%;
+        max-width: 350px;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(5px); /* Hiệu ứng kính mờ hiện đại */
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      input,
+      select {
+        width: 100%;
+        padding: 14px;
+        margin: 12px 0;
+        border: none;
+        border-radius: 25px; /* Bo góc tròn hơn */
+        background: #f9fafb;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+      }
+
+      input:focus,
+      select:focus {
+        outline: none;
+        background: #ffffff;
+        box-shadow: 0 0 10px rgba(30, 144, 255, 0.2); /* Viền phát sáng xanh biển */
+      }
+
+      button {
+        width: 100%;
+        padding: 14px;
+        margin-top: 15px;
+        font-size: 16px;
+        background: linear-gradient(
+          90deg,
+          #1e90ff,
+          #87ceeb
+        ); /* Gradient xanh biển */
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      button:hover {
+        transform: translateY(-2px); /* Nâng nút lên khi hover */
+        box-shadow: 0 5px 15px rgba(30, 144, 255, 0.4);
+      }
+
+      .back-btn {
+        background: #ecf0f3;
+        color: #2c3e50;
+        margin-top: 20px;
+      }
+
+      .back-btn:hover {
+        background: #dfe6e9;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(44, 62, 80, 0.2);
+      }
+
+      /* Hiệu ứng animation cho form */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .form-container {
+        animation: fadeInUp 0.5s ease-out;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="form-container">
+      <h2>Đăng ký tài khoản</h2>
+
+      <input type="text" id="username" placeholder="Tên đăng nhập" /><br />
+      <input type="password" id="password" placeholder="Mật khẩu" /><br />
+      <input type="text" id="name" placeholder="Họ và tên" /><br />
+      <select id="role">
+        <option value="student">Sinh viên</option>
+        <option value="admin">Admin</option>
+      </select>
+      <br />
+
+      <button onclick="register()">Đăng ký</button>
+      <button class="back-btn" onclick="window.location.href='login.html'">
+        ⬅ Quay lại đăng nhập
+      </button>
+    </div>
+
+    <script>
+      async function register() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        const name = document.getElementById("name").value;
+        const role = document.getElementById("role").value;
+
+        const res = await fetch("http://localhost:3000/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password, name, role }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          alert("Đăng ký thành công! Đang chuyển về trang đăng nhập...");
+          setTimeout(() => {
+            window.location.href = "login.html";
+          }, 1000);
+        } else {
+          alert(data.error || "Đăng ký thất bại!");
+        }
+      }
+    </script>
+  </body>
+</html>
