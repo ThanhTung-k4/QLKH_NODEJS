@@ -28,9 +28,28 @@ const RegistrationController = {
 
       // Kiểm tra giới hạn số lượng sinh viên
       const [courseRows] = await db.query(
-        "SELECT max_students FROM courses WHERE id = ?",
+        "SELECT max_students, registration_start, registration_end FROM courses WHERE id = ?",
         [courseId]
       );
+
+      if (!courseRows.length) {
+        return res.status(404).json({ error: "Không tìm thấy khóa học" });
+      }
+
+      const { max_students, registration_start, registration_end } =
+        courseRows[0];
+
+      // Kiểm tra hạn đăng ký
+      const now = new Date();
+      const startDate = new Date(registration_start);
+      const endDate = new Date(registration_end);
+
+      if (now < startDate || now > endDate) {
+        return res
+          .status(400)
+          .json({ error: "Khóa học đã hết hạn đăng ký hoặc chưa mở đăng ký" });
+      }
+
       const max = courseRows[0]?.max_students || 0;
       const [countRows] = await db.query(
         "SELECT COUNT(*) AS total FROM registrations WHERE course_id = ?",

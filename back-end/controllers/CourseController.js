@@ -7,10 +7,19 @@ const CourseController = {
   },
 
   create: async (req, res) => {
-    const { title, description, max_students } = req.body;
+    const {
+      title,
+      description,
+      max_students,
+      registration_start,
+      registration_end,
+    } = req.body;
+
     await db.query(
-      "INSERT INTO courses (title, description, max_students) VALUES (?, ?, ?)",
-      [title, description, max_students]
+      `INSERT INTO courses 
+       (title, description, max_students, registration_start, registration_end) 
+       VALUES (?, ?, ?, ?, ?)`,
+      [title, description, max_students, registration_start, registration_end]
     );
 
     res.json({ message: "Đã thêm khóa học" });
@@ -18,10 +27,27 @@ const CourseController = {
 
   update: async (req, res) => {
     const id = req.params.id;
-    const { title, description, max_students } = req.body;
+    const {
+      title,
+      description,
+      max_students,
+      registration_start,
+      registration_end,
+    } = req.body;
+
     await db.query(
-      "UPDATE courses SET title = ?, description = ?, max_students = ? WHERE id = ?",
-      [title, description, max_students, id]
+      `UPDATE courses 
+       SET title = ?, description = ?, max_students = ?, 
+           registration_start = ?, registration_end = ? 
+       WHERE id = ?`,
+      [
+        title,
+        description,
+        max_students,
+        registration_start,
+        registration_end,
+        id,
+      ]
     );
 
     res.json({ message: "Đã cập nhật khóa học" });
@@ -30,10 +56,7 @@ const CourseController = {
   delete: async (req, res) => {
     const id = req.params.id;
     try {
-      // Xóa các bản ghi liên quan trong bảng registrations trước
       await db.query("DELETE FROM registrations WHERE course_id = ?", [id]);
-
-      // Sau đó mới xóa khóa học
       await db.query("DELETE FROM courses WHERE id = ?", [id]);
 
       res.json({ message: "Đã xóa khóa học" });

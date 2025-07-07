@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Quản lý khóa học</title>
     <link rel="stylesheet" href="course-style.css" />
   </head>
   <body>
-    <!-- course-management.html -->
     <div class="page">
       <h2><i class="fa-solid fa-book"></i> Quản lý khóa học</h2>
       <form id="courseForm" class="form-inline">
@@ -19,8 +17,21 @@
           placeholder="Số lượng tối đa"
           required
         />
+        <input
+          type="date"
+          id="regStartDate"
+          placeholder="Ngày bắt đầu"
+          required
+        />
+        <input
+          type="date"
+          id="regEndDate"
+          placeholder="Ngày kết thúc"
+          required
+        />
         <button type="submit">➕ Thêm</button>
       </form>
+
       <table class="styled-table">
         <thead>
           <tr>
@@ -28,11 +39,15 @@
             <th>Tên</th>
             <th>Mô tả</th>
             <th>Số lượng</th>
+            <th>Bắt đầu</th>
+            <th>Kết thúc</th>
             <th>Thao tác</th>
           </tr>
         </thead>
         <tbody id="courseTable"></tbody>
       </table>
     </div>
+
+    <script src="course-management.js"></script>
   </body>
 </html>
