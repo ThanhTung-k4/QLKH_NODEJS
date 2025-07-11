@@ -113,3 +113,39 @@ async function deleteCourse(id) {
     fetchCourses();
   }
 }
+async function searchCourses() {
+  const keyword = document.getElementById("searchInput").value.toLowerCase();
+  const tbody = document.getElementById("courseTable");
+  if (!tbody) return;
+
+  const res = await fetch(`${api}/courses`);
+  const courses = await res.json();
+  tbody.innerHTML = "";
+
+  const filtered = courses.filter((c) =>
+    c.title.toLowerCase().includes(keyword)
+  );
+
+  filtered.forEach((c) => {
+    const regStart = c.registration_start
+      ? formatDateInput(c.registration_start)
+      : "";
+    const regEnd = c.registration_end
+      ? formatDateInput(c.registration_end)
+      : "";
+
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${c.id}</td>
+      <td><input value="${c.title}" id="title-${c.id}" /></td>
+      <td><input value="${c.description}" id="desc-${c.id}" /></td>
+      <td><input type="number" value="${c.max_students}" id="max-${c.id}" /></td>
+      <td><input type="date" value="${regStart}" id="start-${c.id}" /></td>
+      <td><input type="date" value="${regEnd}" id="end-${c.id}" /></td>
+      <td>
+        <button onclick="updateCourse(${c.id})">Sửa</button>
+        <button onclick="deleteCourse(${c.id})">Xóa</button>
+      </td>`;
+    tbody.appendChild(row);
+  });
+}

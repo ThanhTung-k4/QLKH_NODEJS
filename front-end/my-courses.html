@@ -1,6 +1,15 @@
 <!-- my-courses.html -->
 <div class="page">
   <h2>📚 Khóa học đã đăng ký</h2>
+  <div class="search-box">
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Tìm theo tên khóa học..."
+    />
+    <button onclick="searchMyCourses()">🔍 Tìm</button>
+  </div>
+
   <table class="styled-table">
     <thead>
       <tr>
@@ -8,6 +17,8 @@
         <th>Tên</th>
         <th>Trạng thái</th>
         <th>✅ Hoàn thành</th>
+        <th>❌ Hủy đăng ký</th>
+        <!-- Cột mới -->
       </tr>
     </thead>
     <tbody id="myCourses"></tbody>

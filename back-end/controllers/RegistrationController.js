@@ -1,8 +1,8 @@
-// controllers/RegistrationController.js
+// Import kết nối cơ sở dữ liệu
 const db = require("../db");
 
 const RegistrationController = {
-  // Lấy danh sách toàn bộ lượt đăng ký (cho frontend đếm số lượng)
+  // 📌 LẤY TẤT CẢ LƯỢT ĐĂNG KÝ (dành cho frontend đếm hoặc admin xem thống kê)
   getAll: async (req, res) => {
     try {
       const [rows] = await db.query("SELECT * FROM registrations");
@@ -13,11 +13,12 @@ const RegistrationController = {
     }
   },
 
-  // Sinh viên đăng ký khóa học
+  // 📌 SINH VIÊN ĐĂNG KÝ KHÓA HỌC
   create: async (req, res) => {
     const { studentId, courseId } = req.body;
+
     try {
-      // Kiểm tra đã đăng ký chưa
+      // 🛑 B1: Kiểm tra xem sinh viên đã đăng ký khóa học này chưa
       const [exists] = await db.query(
         "SELECT * FROM registrations WHERE student_id = ? AND course_id = ?",
         [studentId, courseId]
@@ -26,7 +27,7 @@ const RegistrationController = {
         return res.status(400).json({ error: "Đã đăng ký khóa học này rồi" });
       }
 
-      // Kiểm tra giới hạn số lượng sinh viên
+      // 🔍 B2: Lấy thông tin khóa học (giới hạn sinh viên, thời gian đăng ký)
       const [courseRows] = await db.query(
         "SELECT max_students, registration_start, registration_end FROM courses WHERE id = ?",
         [courseId]
@@ -39,18 +40,19 @@ const RegistrationController = {
       const { max_students, registration_start, registration_end } =
         courseRows[0];
 
-      // Kiểm tra hạn đăng ký
+      // 📅 B3: Kiểm tra xem thời gian hiện tại có nằm trong thời gian đăng ký không
       const now = new Date();
       const startDate = new Date(registration_start);
       const endDate = new Date(registration_end);
 
       if (now < startDate || now > endDate) {
-        return res
-          .status(400)
-          .json({ error: "Khóa học đã hết hạn đăng ký hoặc chưa mở đăng ký" });
+        return res.status(400).json({
+          error: "Khóa học đã hết hạn đăng ký hoặc chưa mở đăng ký",
+        });
       }
 
-      const max = courseRows[0]?.max_students || 0;
+      // 👥 B4: Kiểm tra số lượng sinh viên đã đăng ký
+      const max = max_students || 0;
       const [countRows] = await db.query(
         "SELECT COUNT(*) AS total FROM registrations WHERE course_id = ?",
         [courseId]
@@ -61,6 +63,7 @@ const RegistrationController = {
         return res.status(400).json({ error: "Khóa học đã đầy" });
       }
 
+      // ✅ B5: Thêm dữ liệu đăng ký mới với trạng thái mặc định là 'incomplete'
       await db.query(
         "INSERT INTO registrations (student_id, course_id, status) VALUES (?, ?, 'incomplete')",
         [studentId, courseId]
@@ -73,7 +76,7 @@ const RegistrationController = {
     }
   },
 
-  // Lấy khóa học đã đăng ký theo sinh viên
+  // 📌 LẤY DANH SÁCH KHÓA HỌC MÀ MỘT SINH VIÊN ĐÃ ĐĂNG KÝ
   getByStudent: async (req, res) => {
     const studentId = req.query.studentId;
     try {
@@ -90,7 +93,7 @@ const RegistrationController = {
     }
   },
 
-  // Admin xem toàn bộ danh sách đăng ký của sinh viên
+  // 📌 ADMIN: XEM TOÀN BỘ DANH SÁCH ĐĂNG KÝ CỦA TẤT CẢ SINH VIÊN
   getAllForAdmin: async (req, res) => {
     try {
       const [rows] = await db.query(`
@@ -110,10 +113,11 @@ const RegistrationController = {
     }
   },
 
-  // Cập nhật trạng thái hoàn thành
+  // 📌 CẬP NHẬT TRẠNG THÁI HOÀN THÀNH KHÓA HỌC (dành cho admin hoặc sau khi sinh viên hoàn thành)
   update: async (req, res) => {
-    const id = req.params.id;
-    const { status } = req.body;
+    const id = req.params.id; // ID của bản ghi trong bảng `registrations`
+    const { status } = req.body; // Trạng thái mới: 'completed' hoặc 'incomplete'
+
     try {
       await db.query("UPDATE registrations SET status = ? WHERE id = ?", [
         status,
@@ -122,6 +126,26 @@ const RegistrationController = {
       res.json({ message: "Cập nhật trạng thái thành công" });
     } catch (err) {
       res.status(500).json({ error: "Lỗi cập nhật trạng thái" });
+    }
+  },
+  // 📌 HỦY ĐĂNG KÝ KHÓA HỌC (theo ID)
+  delete: async (req, res) => {
+    const { id } = req.params;
+
+    try {
+      const [result] = await db.query(
+        "DELETE FROM registrations WHERE id = ?",
+        [id]
+      );
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: "Không tìm thấy đăng ký để xóa" });
+      }
+
+      res.json({ message: "Đã hủy đăng ký thành công" });
+    } catch (err) {
+      console.error("❌ Lỗi delete:", err);
+      res.status(500).json({ error: "Lỗi server khi xóa đăng ký" });
     }
   },
 };

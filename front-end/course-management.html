@@ -7,6 +7,15 @@
   </head>
   <body>
     <div class="page">
+      <div class="search-container">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Tìm theo tên khóa học..."
+        />
+        <button onclick="searchCourses()">🔍 Tìm</button>
+      </div>
+
       <h2><i class="fa-solid fa-book"></i> Quản lý khóa học</h2>
       <form id="courseForm" class="form-inline">
         <input type="text" id="title" placeholder="Tên khóa học" required />

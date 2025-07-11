@@ -125,3 +125,34 @@ button:hover {
   text-decoration: line-through;
   opacity: 0.6;
 }
+/* Style cho thanh tìm kiếm */
+.search-box {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.search-box input[type="text"] {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 250px;
+  font-size: 14px;
+}
+
+/* Style cho nút tìm kiếm */
+.search-box button {
+  padding: 8px 14px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.search-box button:hover {
+  background-color: #0056b3;
+}
